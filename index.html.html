@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aresys Dundies — First Edition</title>
+<title>Aresys Dundies 2026 — First Edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
@@ -14,43 +14,67 @@
 
 <!-- NAVBAR -->
 <nav class="navbar">
-  <div class="brand"><span class="star">★</span> ARESYS DUNDIES</div>
+  <div class="brand" id="navBrand">ARESYS DUNDIES</div>
   <div class="nav-links">
-    <button data-nav="home" class="active">Home</button>
-    <button data-nav="poll">Vota la Data</button>
-    <button data-nav="organizers">Organizzatori</button>
+    <button data-nav="home" class="nav-btn">Home</button>
+    <button data-nav="poll" class="nav-btn auth-only">Vota la Data</button>
+    <button data-nav="organizers" class="nav-btn auth-only organizer-only">Dashboard</button>
+    <span id="navUser" class="nav-user auth-only"></span>
+    <button id="logoutBtn" class="nav-btn logout auth-only">Logout</button>
   </div>
 </nav>
 
 <!-- HOME -->
 <section class="page active" id="page-home">
-  <div class="hero">
-    <div class="spotlight"></div>
-    <div class="trophy">🏆</div>
-    <div class="kicker">The Aresys Awards</div>
-    <h1>Aresys Dundies</h1>
-    <div class="edition"><div class="line"></div><span>First Edition</span><div class="line"></div></div>
-    <p class="sub">Una serata di gloria, risate e premi immeritati.</p>
-  </div>
+  <div class="home-wrap">
+    <div class="home-brand">
+      <h1 class="home-title">ARESYS DUNDIES 2026</h1>
+      <div class="home-subtitle">FIRST EDITION</div>
+    </div>
 
-  <div class="container">
-    <div class="grid-2">
-      <div class="card">
-        <h2>La Serata</h2>
-        <p class="hint">Un evento epico per celebrare i veri protagonisti di Aresys.</p>
-        <p style="color:var(--muted);line-height:1.7;font-size:14px">
-          Preparati: abito elegante, portafoglio per il taxi e spirito di sopportazione.
-          Le statuette sono di plastica dorata, ma l'onore è eterno.
-        </p>
-      </div>
-      <div class="card">
-        <h2>Come Partecipare</h2>
-        <p class="hint">Due semplici passi per essere della partita.</p>
-        <p style="color:var(--muted);line-height:1.7;font-size:14px">
-          1. Vai alla sezione <strong style="color:var(--gold-light)">Vota la Data</strong> e indica la tua disponibilità.<br>
-          2. Conferma la tua presenza e attendi istruzioni dagli organizzatori.
-        </p>
-      </div>
+    <div class="home-actions">
+      <button class="role-btn" data-role="organizer">
+        <div class="role-icon">🔒</div>
+        <div class="role-label">Organizzatore</div>
+        <div class="role-desc">Accesso alla dashboard, gestione Excel e scaletta</div>
+      </button>
+      <button class="role-btn" data-role="plebeo">
+        <div class="role-icon">👤</div>
+        <div class="role-label">Plebeo</div>
+        <div class="role-desc">Vota la data della serata e conferma la presenza</div>
+      </button>
+    </div>
+
+    <div class="home-footer">Seleziona il tuo ruolo per accedere</div>
+  </div>
+</section>
+
+<!-- LOGIN -->
+<section class="page" id="page-login">
+  <div class="login-wrap">
+    <div class="login-box">
+      <button class="back-btn" id="loginBack">← Indietro</button>
+      <h2 class="login-title" id="loginRoleTitle">Accesso</h2>
+      <p class="login-desc" id="loginRoleDesc">Inserisci le tue credenziali.</p>
+
+      <form id="loginForm" autocomplete="off">
+        <label class="field">
+          <span class="lbl">Nome / Name</span>
+          <input type="text" id="loginNome" placeholder="Mario" required>
+        </label>
+        <label class="field">
+          <span class="lbl">Cognome / Surname</span>
+          <input type="text" id="loginCognome" placeholder="Rossi" required>
+        </label>
+        <label class="field">
+          <span class="lbl">Password</span>
+          <input type="password" id="loginPwd" placeholder="••••••••" required>
+        </label>
+
+        <div class="login-hint" id="loginHint"></div>
+
+        <button type="submit" class="btn primary full" id="loginSubmit">Accedi</button>
+      </form>
     </div>
   </div>
 </section>
@@ -58,45 +82,35 @@
 <!-- POLL -->
 <section class="page" id="page-poll">
   <div class="container">
-    <div class="hero" style="padding:20px 0 10px">
-      <div class="kicker">Sondaggio</div>
-      <h1 style="font-size:clamp(28px,5vw,52px)">Quando si fa?</h1>
-      <p class="sub">Seleziona le date in cui sei disponibile e conferma la presenza.</p>
+    <div class="page-header">
+      <h1 class="page-title">Vota la Data</h1>
+      <p class="page-sub">Seleziona i giorni in cui sei disponibile e conferma la tua presenza.</p>
     </div>
 
-    <div class="card">
-      <h2>La Tua Disponibilità</h2>
-      <p class="hint">Clicca sulle date in cui saresti disponibile. Puoi selezionarne più di una.</p>
-
-      <div class="grid-2" style="align-items:end">
-        <label class="field">
-          <span class="lbl">Il tuo nome</span>
-          <input type="text" id="pollName" placeholder="Es. Mario Rossi">
-        </label>
-        <div style="padding-bottom:14px">
-          <span class="lbl" style="display:block;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Parteciperai?</span>
-          <div class="attend-row">
-            <div class="attend-opt" data-attend="yes">Sì, ci sono</div>
-            <div class="attend-opt" data-attend="maybe">Forse</div>
-            <div class="attend-opt" data-attend="no">Non posso</div>
-          </div>
-        </div>
+    <div class="panel">
+      <div class="panel-header">
+        <h2>La tua disponibilità</h2>
+        <div class="poll-user">Stai votando come <strong id="pollUserName">—</strong></div>
       </div>
 
-      <div class="divider">✦ ✦ ✦</div>
+      <div class="attend-row">
+        <div class="attend-opt" data-attend="yes">✓ Ci sono</div>
+        <div class="attend-opt" data-attend="maybe">? Forse</div>
+        <div class="attend-opt" data-attend="no">✕ Non posso</div>
+      </div>
 
       <div id="pollCalendar" class="poll-grid"></div>
 
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
-        <button class="btn" id="submitPoll">Conferma Voto</button>
+      <div class="panel-actions">
+        <button class="btn primary" id="submitPoll">Conferma Voto</button>
         <button class="btn ghost" id="resetPoll">Azzera Selezioni</button>
       </div>
+    </div>
 
-      <div class="summary">
-        <h3>Risultati in tempo reale</h3>
-        <div class="results-list" id="pollResults">
-          <div class="empty-state">Ancora nessun voto.</div>
-        </div>
+    <div class="panel">
+      <h2>Risultati in tempo reale</h2>
+      <div class="results-list" id="pollResults">
+        <div class="empty-state">Ancora nessun voto.</div>
       </div>
     </div>
   </div>
@@ -105,73 +119,54 @@
 <!-- ORGANIZERS -->
 <section class="page" id="page-organizers">
   <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">Dashboard Organizzatori</h1>
+      <p class="page-sub">Gestione partecipanti, awards ed Excel condiviso.</p>
+    </div>
 
-    <!-- LOGIN -->
-    <div id="orgLogin" class="login-wrap">
-      <div class="card">
-        <div class="lock">🔒</div>
-        <h2 style="text-align:center">Area Organizzatori</h2>
-        <p class="hint" style="text-align:center">Accesso riservato al comitato.</p>
-        <label class="field">
-          <span class="lbl">Password</span>
-          <input type="password" id="orgPwd" placeholder="••••••••">
-        </label>
-        <button class="btn" style="width:100%;justify-content:center" id="orgLoginBtn">Entra</button>
-        <div class="error-msg" id="orgError"></div>
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Partecipanti &amp; Awards</h2>
+      </div>
+
+      <div class="toolbar">
+        <button class="btn primary" id="btnImport">📥 Importa Excel</button>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none">
+        <button class="btn ghost" id="btnExport">📤 Esporta</button>
+        <button class="btn ghost" id="btnAddRow">＋ Aggiungi Riga</button>
+        <button class="btn ghost" id="btnTemplate">📄 Template</button>
+        <button class="btn danger" id="btnClear">🗑 Svuota</button>
+      </div>
+
+      <div class="table-wrap">
+        <table id="orgTable">
+          <thead>
+            <tr>
+              <th style="width:40px">#</th>
+              <th>Nome</th>
+              <th>Cognome</th>
+              <th style="width:90px;text-align:center">Presente</th>
+              <th>Award (multi)</th>
+              <th>Award 2</th>
+              <th style="width:50px"></th>
+            </tr>
+          </thead>
+          <tbody id="orgTableBody"></tbody>
+        </table>
+        <div id="orgEmpty" class="empty-state">Nessun partecipante. Importa un Excel o aggiungi una riga.</div>
       </div>
     </div>
 
-    <!-- DASHBOARD -->
-    <div id="orgDash" style="display:none">
-      <div class="hero" style="padding:20px 0 10px">
-        <div class="kicker">Comitato</div>
-        <h1 style="font-size:clamp(28px,5vw,52px)">Dashboard Organizzatori</h1>
-      </div>
-
-      <div class="card" style="margin-bottom:22px">
-        <h2>Lista Partecipanti &amp; Awards</h2>
-        <p class="hint">Importa/esporta il file Excel condiviso, oppure modifica direttamente la tabella.</p>
-
-        <div class="toolbar">
-          <button class="btn" id="btnImport">📥 Importa Excel</button>
-          <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none">
-          <button class="btn ghost" id="btnExport">📤 Esporta Excel</button>
-          <button class="btn ghost" id="btnAddRow">＋ Aggiungi Riga</button>
-          <button class="btn ghost" id="btnTemplate">📄 Scarica Template</button>
-          <button class="btn danger" id="btnClear">🗑 Svuota</button>
-          <button class="btn danger" id="btnLogout" style="margin-left:auto">Esci</button>
-        </div>
-
-        <div class="table-wrap">
-          <table id="orgTable">
-            <thead>
-              <tr>
-                <th style="width:40px">#</th>
-                <th>Nome</th>
-                <th>Cognome</th>
-                <th style="width:90px;text-align:center">Presente</th>
-                <th>Award (multi)</th>
-                <th>Award 2</th>
-                <th style="width:50px"></th>
-              </tr>
-            </thead>
-            <tbody id="orgTableBody"></tbody>
-          </table>
-          <div id="orgEmpty" class="empty-state">Nessun partecipante. Importa un Excel o aggiungi una riga.</div>
-        </div>
-      </div>
-
-      <div class="card">
+    <div class="panel">
+      <div class="panel-header">
         <h2>Scaletta</h2>
-        <p class="hint">La scaletta della serata verrà gestita in questa sezione.</p>
-        <div class="coming-soon">
-          <div class="icn">🎬</div>
-          <h3>Prossimamente</h3>
-          <p>Qui potrai costruire la scaletta della serata: apertura, premi, discorsi e gran finale.</p>
-        </div>
+      </div>
+      <div class="coming-soon">
+        <div class="icn">🎬</div>
+        <h3>Prossimamente</h3>
+        <p>Qui potrai costruire la scaletta della serata.</p>
       </div>
     </div>
-
   </div>
 </section>
 
