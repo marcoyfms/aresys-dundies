@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aresys Dundies — First Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="brand"><span class="star">★</span> ARESYS DUNDIES</div>
+  <div class="nav-links">
+    <button data-nav="home" class="active">Home</button>
+    <button data-nav="poll">Vota la Data</button>
+    <button data-nav="organizers">Organizzatori</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section class="page active" id="page-home">
+  <div class="hero">
+    <div class="spotlight"></div>
+    <div class="trophy">🏆</div>
+    <div class="kicker">The Aresys Awards</div>
+    <h1>Aresys Dundies</h1>
+    <div class="edition"><div class="line"></div><span>First Edition</span><div class="line"></div></div>
+    <p class="sub">Una serata di gloria, risate e premi immeritati.</p>
+  </div>
+
+  <div class="container">
+    <div class="grid-2">
+      <div class="card">
+        <h2>La Serata</h2>
+        <p class="hint">Un evento epico per celebrare i veri protagonisti di Aresys.</p>
+        <p style="color:var(--muted);line-height:1.7;font-size:14px">
+          Preparati: abito elegante, portafoglio per il taxi e spirito di sopportazione.
+          Le statuette sono di plastica dorata, ma l'onore è eterno.
+        </p>
+      </div>
+      <div class="card">
+        <h2>Come Partecipare</h2>
+        <p class="hint">Due semplici passi per essere della partita.</p>
+        <p style="color:var(--muted);line-height:1.7;font-size:14px">
+          1. Vai alla sezione <strong style="color:var(--gold-light)">Vota la Data</strong> e indica la tua disponibilità.<br>
+          2. Conferma la tua presenza e attendi istruzioni dagli organizzatori.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POLL -->
+<section class="page" id="page-poll">
+  <div class="container">
+    <div class="hero" style="padding:20px 0 10px">
+      <div class="kicker">Sondaggio</div>
+      <h1 style="font-size:clamp(28px,5vw,52px)">Quando si fa?</h1>
+      <p class="sub">Seleziona le date in cui sei disponibile e conferma la presenza.</p>
+    </div>
+
+    <div class="card">
+      <h2>La Tua Disponibilità</h2>
+      <p class="hint">Clicca sulle date in cui saresti disponibile. Puoi selezionarne più di una.</p>
+
+      <div class="grid-2" style="align-items:end">
+        <label class="field">
+          <span class="lbl">Il tuo nome</span>
+          <input type="text" id="pollName" placeholder="Es. Mario Rossi">
+        </label>
+        <div style="padding-bottom:14px">
+          <span class="lbl" style="display:block;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Parteciperai?</span>
+          <div class="attend-row">
+            <div class="attend-opt" data-attend="yes">Sì, ci sono</div>
+            <div class="attend-opt" data-attend="maybe">Forse</div>
+            <div class="attend-opt" data-attend="no">Non posso</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <div id="pollCalendar" class="poll-grid"></div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+        <button class="btn" id="submitPoll">Conferma Voto</button>
+        <button class="btn ghost" id="resetPoll">Azzera Selezioni</button>
+      </div>
+
+      <div class="summary">
+        <h3>Risultati in tempo reale</h3>
+        <div class="results-list" id="pollResults">
+          <div class="empty-state">Ancora nessun voto.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORGANIZERS -->
+<section class="page" id="page-organizers">
+  <div class="container">
+
+    <!-- LOGIN -->
+    <div id="orgLogin" class="login-wrap">
+      <div class="card">
+        <div class="lock">🔒</div>
+        <h2 style="text-align:center">Area Organizzatori</h2>
+        <p class="hint" style="text-align:center">Accesso riservato al comitato.</p>
+        <label class="field">
+          <span class="lbl">Password</span>
+          <input type="password" id="orgPwd" placeholder="••••••••">
+        </label>
+        <button class="btn" style="width:100%;justify-content:center" id="orgLoginBtn">Entra</button>
+        <div class="error-msg" id="orgError"></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="orgDash" style="display:none">
+      <div class="hero" style="padding:20px 0 10px">
+        <div class="kicker">Comitato</div>
+        <h1 style="font-size:clamp(28px,5vw,52px)">Dashboard Organizzatori</h1>
+      </div>
+
+      <div class="card" style="margin-bottom:22px">
+        <h2>Lista Partecipanti &amp; Awards</h2>
+        <p class="hint">Importa/esporta il file Excel condiviso, oppure modifica direttamente la tabella.</p>
+
+        <div class="toolbar">
+          <button class="btn" id="btnImport">📥 Importa Excel</button>
+          <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none">
+          <button class="btn ghost" id="btnExport">📤 Esporta Excel</button>
+          <button class="btn ghost" id="btnAddRow">＋ Aggiungi Riga</button>
+          <button class="btn ghost" id="btnTemplate">📄 Scarica Template</button>
+          <button class="btn danger" id="btnClear">🗑 Svuota</button>
+          <button class="btn danger" id="btnLogout" style="margin-left:auto">Esci</button>
+        </div>
+
+        <div class="table-wrap">
+          <table id="orgTable">
+            <thead>
+              <tr>
+                <th style="width:40px">#</th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th style="width:90px;text-align:center">Presente</th>
+                <th>Award (multi)</th>
+                <th>Award 2</th>
+                <th style="width:50px"></th>
+              </tr>
+            </thead>
+            <tbody id="orgTableBody"></tbody>
+          </table>
+          <div id="orgEmpty" class="empty-state">Nessun partecipante. Importa un Excel o aggiungi una riga.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Scaletta</h2>
+        <p class="hint">La scaletta della serata verrà gestita in questa sezione.</p>
+        <div class="coming-soon">
+          <div class="icn">🎬</div>
+          <h3>Prossimamente</h3>
+          <p>Qui potrai costruire la scaletta della serata: apertura, premi, discorsi e gran finale.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
